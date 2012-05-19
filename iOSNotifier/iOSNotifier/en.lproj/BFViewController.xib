@@ -140,7 +140,7 @@
 					</object>
 					<object class="IBUIImageView" id="48392335">
 						<reference key="NSNextResponder" ref="774585933"/>
-						<int key="NSvFlags">282</int>
+						<int key="NSvFlags">269</int>
 						<string key="NSFrame">{{60, 240}, {200, 200}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
