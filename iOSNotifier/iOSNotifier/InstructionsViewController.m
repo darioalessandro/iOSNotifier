@@ -34,6 +34,10 @@ limitations under the License.*/
 	return self;
 }
 
++(InstructionsViewController *)instructionsViewControllerInstance{
+    InstructionsViewController * instructionViewController= [[InstructionsViewController alloc] initWithNibName:@"InstructionsView" bundle:nil];
+    return [instructionViewController autorelease];
+}
 
 -(void) showTheNextInstructions: (NSString *)instructions seconds: (NSInteger)secondsToShow{
 //	DarioSharedPreprocessorDirectivesDebugLog(@"I got Called with %d seconds", secondsToShow);
