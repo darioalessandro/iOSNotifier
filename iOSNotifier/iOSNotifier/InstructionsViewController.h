@@ -26,6 +26,7 @@
 	NSInteger timerDuration;
 	NSTimer * referenceTimer;
 }
+
 +(InstructionsViewController *)instructionsViewControllerInstance;
 -(void)changeLabelText:(NSString *)text;
 @property (nonatomic, assign) NSInteger timerCount;

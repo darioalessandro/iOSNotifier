@@ -36,7 +36,7 @@ limitations under the License.*/
 
 +(InstructionsViewController *)instructionsViewControllerInstance{
     InstructionsViewController * instructionViewController= [[InstructionsViewController alloc] initWithNibName:@"InstructionsView" bundle:nil];
-    return [instructionViewController autorelease];
+    return instructionViewController;
 }
 
 -(void) showTheNextInstructions: (NSString *)instructions seconds: (NSInteger)secondsToShow{
@@ -45,15 +45,14 @@ limitations under the License.*/
 	timerDuration= secondsToShow;
 
 	referenceTimer= [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerTick:) userInfo:self repeats:YES];	
-	id delegate= [[[UIApplication sharedApplication] delegate] retain];
-	[UIView beginAnimations:@"InstructionView" context:self];
+	id delegate= [[UIApplication sharedApplication] delegate];
+	[UIView beginAnimations:@"InstructionView" context:(__bridge void *)(self)];
 	[UIView setAnimationDuration:1];
 	[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.view cache:YES];
 	[instructionsLabel setText:instructions];
 	[self updateInstructionsViewWithOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
 	[[delegate window] addSubview:self.view];
 	[UIView commitAnimations];
-	[delegate release];
 }
 
 -(void)setHeightOfLineWithInstructions:(NSString *)instructions font:(UIFont *)font andSize:(CGSize)size{
@@ -66,32 +65,29 @@ limitations under the License.*/
 	timerCount= 0;
 	timerDuration= secondsToShow;
 	referenceTimer= [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerTick:) userInfo:self repeats:YES];	
-	id delegate= [[[UIApplication sharedApplication] delegate] retain];
-	[UIView beginAnimations:@"InstructionView" context:self];
+	id delegate= [[UIApplication sharedApplication] delegate];
+	[UIView beginAnimations:@"InstructionView" context:(__bridge void *)(self)];
 	[UIView setAnimationDuration:1];
 	[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.view cache:YES];
 	[instructionsLabel setText:instructions];
 	[self updateInstructionsViewWithOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
 	[[delegate window] addSubview:self.view];
 	[UIView commitAnimations];
-	[delegate release];
 }
 
 -(void) showLoadingDataBaseInstructions{
-	id delegate= [[[UIApplication sharedApplication] delegate] retain];
-	[UIView beginAnimations:@"InstructionView" context:self];
+	id delegate= [[UIApplication sharedApplication] delegate];
+	[UIView beginAnimations:@"InstructionView" context:(__bridge void *)(self)];
 	[UIView setAnimationDuration:1];
 	[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.view cache:YES];
 	UIActivityIndicatorView * activityView=	[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
 	[activityView startAnimating];
 	activityView.frame= CGRectMake(250, 20, 40, 40);
 	[self.view addSubview: activityView];
-	[activityView release];
 	[instructionsLabel setText:@"Cargando la base de datos..."];
 	self.view.frame=CGRectMake(0, 140, 320, 200);
 	[[delegate window] addSubview:self.view];
 	[UIView commitAnimations];
-	[delegate release];
 	
 }
 
@@ -110,15 +106,14 @@ limitations under the License.*/
 	timerCount= 0;
 	timerDuration= secondsToShow;
 	referenceTimer= [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerTick:) userInfo:self repeats:YES];	
-	id delegate= [[[UIApplication sharedApplication] delegate] retain];
-	[UIView beginAnimations:@"InstructionView" context:self];
+	id delegate= [[UIApplication sharedApplication] delegate];
+	[UIView beginAnimations:@"InstructionView" context:(__bridge void *)(self)];
 	[UIView setAnimationDuration:1];
 	[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.view cache:YES];
 	[instructionsLabel setText:instructions];
 	self.view.frame=CGRectMake(point.x, point.y, 320, 80);
 	[[delegate window] addSubview:self.view];
 	[UIView commitAnimations];
-	[delegate release];
 	
 }
 
@@ -170,10 +165,10 @@ limitations under the License.*/
 
 - (void)orientationChanged:(NSNotification *)notification
 {
-	NSAutoreleasePool * pool= [[NSAutoreleasePool alloc] init];
+	@autoreleasepool {
 	//[self updateInstructionsViewWithOrientation:[[notification object] orientation]];
-	[self updateInstructionsViewWithOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
-	[pool release];
+		[self updateInstructionsViewWithOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
+	}
 }
 
 -(void)timerTick:(NSTimer*)theTimer{
@@ -185,7 +180,7 @@ limitations under the License.*/
 		timerCount++;
 //		DarioSharedPreprocessorDirectivesDebugLog(@"Tick after %d seconds", timerCount);
 	}else{
-		[UIView beginAnimations:@"InstructionView" context:self];
+		[UIView beginAnimations:@"InstructionView" context:(__bridge void *)(self)];
 		[UIView setAnimationDuration:1];
 		[UIView setAnimationTransition:UIViewAnimationTransitionCurlUp forView:self.view cache:YES];
 		[self.view setTransform:CGAffineTransformIdentity];
@@ -199,7 +194,6 @@ limitations under the License.*/
 //	DarioSharedPreprocessorDirectivesDebugLog(@"Instrucciones mueren");
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[instructionsLabel release], instructionsLabel=nil;
-	[super dealloc];
+	instructionsLabel=nil;
 }
 @end
