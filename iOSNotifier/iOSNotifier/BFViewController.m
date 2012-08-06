@@ -47,7 +47,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-        return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return TRUE;
 }
 
 - (IBAction)showNotification:(UIButton *)sender {
@@ -55,11 +55,5 @@
     NSString * string= [NSString stringWithFormat:@"Text: %@", textToShow.text];
     NSInteger seconds= [numberOfSeconds.text integerValue];
     [instructionViewController showTheNextInstructions:string seconds:seconds];
-    [instructionViewController autorelease];
-}
-- (void)dealloc {
-    [textToShow release];
-    [numberOfSeconds release];
-    [super dealloc];
 }
 @end

@@ -40,39 +40,12 @@ limitations under the License.*/
 }
 
 -(void) showTheNextInstructions: (NSString *)instructions seconds: (NSInteger)secondsToShow{
-//	DarioSharedPreprocessorDirectivesDebugLog(@"I got Called with %d seconds", secondsToShow);
-	timerCount= 0;
-	timerDuration= secondsToShow;
-
-	referenceTimer= [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerTick:) userInfo:self repeats:YES];	
-	id delegate= [[UIApplication sharedApplication] delegate];
-	[UIView beginAnimations:@"InstructionView" context:(__bridge void *)(self)];
-	[UIView setAnimationDuration:1];
-	[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.view cache:YES];
-	[instructionsLabel setText:instructions];
-	[self updateInstructionsViewWithOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
-	[[delegate window] addSubview:self.view];
-	[UIView commitAnimations];
+    [self showTheNextInstructions:instructions seconds:secondsToShow locationInView:CGPointMake(0, 0)];
 }
 
 -(void)setHeightOfLineWithInstructions:(NSString *)instructions font:(UIFont *)font andSize:(CGSize)size{
 	
 	
-}
-
--(void) showTheNextInstructions: (NSString *)instructions seconds: (NSInteger)secondsToShow orientation:(NSString *)orientationString{
-	//	DarioSharedPreprocessorDirectivesDebugLog(@"I got Called with %d seconds", secondsToShow);
-	timerCount= 0;
-	timerDuration= secondsToShow;
-	referenceTimer= [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerTick:) userInfo:self repeats:YES];	
-	id delegate= [[UIApplication sharedApplication] delegate];
-	[UIView beginAnimations:@"InstructionView" context:(__bridge void *)(self)];
-	[UIView setAnimationDuration:1];
-	[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.view cache:YES];
-	[instructionsLabel setText:instructions];
-	[self updateInstructionsViewWithOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
-	[[delegate window] addSubview:self.view];
-	[UIView commitAnimations];
 }
 
 -(void) showLoadingDataBaseInstructions{
@@ -87,8 +60,7 @@ limitations under the License.*/
 	[instructionsLabel setText:@"Cargando la base de datos..."];
 	self.view.frame=CGRectMake(0, 140, 320, 200);
 	[[delegate window] addSubview:self.view];
-	[UIView commitAnimations];
-	
+	[UIView commitAnimations];	
 }
 
 -(void)changeLabelText:(NSString *)text{
@@ -111,10 +83,65 @@ limitations under the License.*/
 	[UIView setAnimationDuration:1];
 	[UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.view cache:YES];
 	[instructionsLabel setText:instructions];
-	self.view.frame=CGRectMake(point.x, point.y, 320, 80);
 	[[delegate window] addSubview:self.view];
+    [self updateInstructionsViewWithOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
 	[UIView commitAnimations];
 	
+}
+
+-(CGFloat)targetHeight{
+    CGFloat height=0;
+    if([[UIDevice currentDevice] userInterfaceIdiom]== UIUserInterfaceIdiomPad){
+        if(UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation])){
+            height=1024;
+        }else{
+            height=768;
+        }
+    }else{
+        if(UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation])){
+            height=480;
+        }else{
+            height=320;
+        }
+    }
+    return height;
+}
+
+-(CGFloat)targetWidth{
+    CGFloat width=0;
+    if([[UIDevice currentDevice] userInterfaceIdiom]== UIUserInterfaceIdiomPad){
+        if(UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation])){
+            width=1024;
+        }else{
+            width=768;
+        }
+    }else{
+        if(UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation])){
+            width=480;
+        }else{
+            width=320;
+        }
+    }
+    return width;
+}
+
+-(CGSize)constrainedSize{
+    CGFloat width=100;
+    CGFloat height=300;
+    if([[UIDevice currentDevice] userInterfaceIdiom]== UIUserInterfaceIdiomPad){
+        if(UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation])){
+            width=1024;
+        }else{
+            width=768;
+        }
+    }else{
+        if(UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation])){
+            width=480;
+        }else{
+            width=320;
+        }
+    }
+    return CGSizeMake(width, height);
 }
 
 -(void)updateInstructionsViewWithOrientation:(UIInterfaceOrientation) orientation{
@@ -123,50 +150,41 @@ limitations under the License.*/
 	CGFloat widthOfInstructionsView;
 	NSInteger heightofNavBarInLandscape=32;
 	CGRect sizeOfStatusBar= [[UIApplication sharedApplication] statusBarFrame];
-
-	if(orientation==UIInterfaceOrientationLandscapeLeft ){
+    widthOfInstructionsView= [self constrainedSize].width;
 		[self.view setTransform:CGAffineTransformIdentity];
-		widthOfInstructionsView= 1024;
-		instructionsLabelConstrainedSize= CGSizeMake(widthOfInstructionsView, 300);
+    instructionsLabelConstrainedSize= CGSizeMake(widthOfInstructionsView, 300);
+	if(orientation==UIInterfaceOrientationLandscapeLeft ){
 		heightOfTextLine= [[instructionsLabel text] sizeWithFont:[instructionsLabel font] constrainedToSize: instructionsLabelConstrainedSize].height+5;
 		self.view.frame=CGRectMake(sizeOfStatusBar.size.width - widthOfInstructionsView/2+heightOfTextLine/2+heightofNavBarInLandscape, widthOfInstructionsView/2 - heightOfTextLine/2, widthOfInstructionsView, heightOfTextLine);
-		instructionsLabel.frame= CGRectMake(5, 0, widthOfInstructionsView-2.5, heightOfTextLine);
-		[self.view setTransform:CGAffineTransformMakeRotation(-90*2*3.1415/360)];
+		[self.view setTransform:CGAffineTransformMakeRotation(-M_PI_2)];
 	}
 	if(orientation==UIInterfaceOrientationLandscapeRight){
-		[self.view setTransform:CGAffineTransformIdentity];
-		widthOfInstructionsView= 1024;
-		instructionsLabelConstrainedSize= CGSizeMake(widthOfInstructionsView, 300);
+        //podrido en iPad
 		heightOfTextLine= [[instructionsLabel text] sizeWithFont:[instructionsLabel font] constrainedToSize: instructionsLabelConstrainedSize].height;
-		//self.view.frame=CGRectMake(-sizeOfStatusBar.size.width + widthOfInstructionsView/2- heightOfTextLine/2-160-heightofNavBarInLandscape, widthOfInstructionsView/2 - heightOfTextLine/2, widthOfInstructionsView, heightOfTextLine);
-		self.view.frame=CGRectMake(180, widthOfInstructionsView/2 - heightOfTextLine/2, widthOfInstructionsView, heightOfTextLine);
-		instructionsLabel.frame= CGRectMake(5, 0, widthOfInstructionsView-2.5, heightOfTextLine);
-		[self.view setTransform:CGAffineTransformMakeRotation(90*2*3.1415/360)];
+        if([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad)
+        self.view.frame=CGRectMake(sizeOfStatusBar.size.width+ 164, widthOfInstructionsView/2 - heightOfTextLine/2, widthOfInstructionsView, heightOfTextLine);
+        else
+            self.view.frame=CGRectMake(sizeOfStatusBar.size.width, widthOfInstructionsView/2 - heightOfTextLine/2, widthOfInstructionsView, heightOfTextLine);
+		[self.view setTransform:CGAffineTransformMakeRotation(M_PI_2)];
 	}
 	if(orientation==UIInterfaceOrientationPortrait){
-		[self.view setTransform:CGAffineTransformIdentity];
-		widthOfInstructionsView= 1024;
-		instructionsLabelConstrainedSize= CGSizeMake(widthOfInstructionsView, 300);
 		heightOfTextLine= [[instructionsLabel text] sizeWithFont:[instructionsLabel font] constrainedToSize: instructionsLabelConstrainedSize].height;
 		self.view.frame=CGRectMake(0, 64, widthOfInstructionsView, heightOfTextLine);
-		instructionsLabel.frame= CGRectMake(5, 0, widthOfInstructionsView-2.5, heightOfTextLine);
 	}
 	if(orientation==UIInterfaceOrientationPortraitUpsideDown){
-		[self.view setTransform:CGAffineTransformIdentity];
-		widthOfInstructionsView= 1024;
-		instructionsLabelConstrainedSize= CGSizeMake(widthOfInstructionsView, 300);
 		heightOfTextLine= [[instructionsLabel text] sizeWithFont:[instructionsLabel font] constrainedToSize: instructionsLabelConstrainedSize].height;
-		self.view.frame=CGRectMake(0, 395, widthOfInstructionsView, heightOfTextLine);
-		instructionsLabel.frame= CGRectMake(5, 0, widthOfInstructionsView-2.5, heightOfTextLine);
-		[self.view setTransform:CGAffineTransformMakeRotation(180*2*3.1415/360)];
+		self.view.frame=CGRectMake(0, [self targetHeight]-44-20, widthOfInstructionsView, heightOfTextLine);
+		[self.view setTransform:CGAffineTransformMakeRotation(M_PI)];
 	}
-//	DarioSharedPreprocessorDirectivesDebugLog(@"Frame que entrego %f %f %f %f con orientacion %d",  self.view.frame.origin.x, self.view.frame.origin.y,  self.view.frame.size.height,self.view.frame.size.width, orientation);
+    NSLog(@"my frame %@", NSStringFromCGRect(self.view.frame));
+    NSLog(@"frame %@", NSStringFromCGRect([[UIApplication sharedApplication] keyWindow].frame));
+    NSLog(@"target %f", [self targetHeight]);
 }
+
 
 - (void)orientationChanged:(NSNotification *)notification
 {
 	@autoreleasepool {
-	//[self updateInstructionsViewWithOrientation:[[notification object] orientation]];
 		[self updateInstructionsViewWithOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
 	}
 }
@@ -190,10 +208,4 @@ limitations under the License.*/
 	}
 }
 
--(void)dealloc{
-//	DarioSharedPreprocessorDirectivesDebugLog(@"Instrucciones mueren");
-	
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	instructionsLabel=nil;
-}
 @end

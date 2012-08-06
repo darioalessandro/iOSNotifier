@@ -33,11 +33,6 @@
 @property (nonatomic, assign) NSInteger timerDuration;
 -(void) showTheNextInstructions: (NSString *)instructions seconds: (NSInteger)secondsToShow;
 -(void) showTheNextInstructions: (NSString *)instructions seconds: (NSInteger)secondsToShow locationInView: (CGPoint) point;
--(void) showTheNextInstructions: (NSString *)instructions seconds: (NSInteger)secondsToShow orientation:(NSString *)orientationString;
--(void)timerTick:(NSTimer*)theTimer;
 -(void) showLoadingDataBaseInstructions;
 -(void)	killInstructions;
-- (void)orientationChanged:(NSNotification *)notification;
--(void)updateInstructionsViewWithOrientation:(UIInterfaceOrientation) orientation;
--(void)setHeightOfLineWithInstructions:(NSString *)instructions font:(UIFont *)font andSize:(CGSize)size;
 @end

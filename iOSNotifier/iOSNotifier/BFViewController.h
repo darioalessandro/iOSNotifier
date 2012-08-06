@@ -20,7 +20,7 @@
 
 @interface BFViewController : UIViewController
 - (IBAction)showNotification:(UIButton *)sender;
-@property (retain, nonatomic) IBOutlet UITextField *textToShow;
-@property (retain, nonatomic) IBOutlet UITextField *numberOfSeconds;
+@property (strong, nonatomic) IBOutlet UITextField *textToShow;
+@property (strong, nonatomic) IBOutlet UITextField *numberOfSeconds;
 
 @end
