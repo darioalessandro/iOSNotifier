@@ -19,7 +19,6 @@
 
 #import <Foundation/Foundation.h>
 
-
 @interface InstructionsViewController : UIViewController {
 	IBOutlet UILabel * instructionsLabel;
 	NSInteger timerCount;
